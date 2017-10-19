@@ -1,0 +1,58 @@
+
+
+typedef struct{
+	int sonha;
+	string duong;
+	string tinhTP;
+}Diachi;
+
+typedef struct{
+	string nganhang;
+	string chinhanh;
+	string sotk;
+}Taikhoan;
+
+typedef struct{
+	string loaibang;
+	int nam;
+}Bangcap;
+
+interface Nguoi(Key CMND){
+	attribute string CMND;
+	attribute string ten;
+	attribute Diachi diachi;
+}
+
+interface Giaovien:Nguoi(Key MaGV extent TapGiaovien){
+	attribute string MaGV
+	attribute List<string> tel;
+	attribute enum ("gs","pgs","gv") trangthai;
+	attribute Taikhoan sotk;
+	relationship Set<Monhoc> dsmonday inverse Monhoc::gv;
+}
+
+interface Sinhvien:Nguoi(Key MSSV extent TapSinhvien){
+	attribute string MSSV;
+	attribute Date ngaysinh;
+	attribute List<Bangcap> bangcap;
+	relationship Set<Monhoc> dsmonhoc inverse Monhoc::dssv;
+	relationship Set<Mondat> dsmondat inverse Mondat::sv;
+}
+
+interface Monhoc(Key MaMH extent TapMonhoc){
+	attribute string MaMH;
+	attribute string ten;
+	attribute string loai;
+	relationship Giaovien gv inverse Giaovien::dsmonday;
+	relationship Set<Sinhvien> dssv inverse Sinhvien::dsmonhoc;
+	relationship Set<Mondat> dat inverse Mondat::mon;
+	relationship Set<Monhoc> laTienQuyet inverse Monhoc::coTienQuyet;
+	relationship Set<Monhoc> coTienQuyet inverse Monhoc::laTienQuyet;
+}
+
+interface Mondat(extent TapMondat){
+	attribute float diem;
+	attribute int nam;
+	relationship Sinhvien sv inverse Sinhvien::dsmondat;
+	relationship Monhoc mon inverse Monhoc::dat;
+}
