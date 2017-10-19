@@ -1,0 +1,87 @@
+﻿ExOQL.pdf
+
+1> 
+SELECT distinct sv.ten
+FROM TapSinhvien sv
+WHERE sv.tuoi() < 20
+sv.tuoi(): phương thức khai báo trong cài đặt
+(year(now()) - year(sv.ngaysinh))
+
+2>
+SELECT sv.ten
+FROM TapSinhvien sv
+WHERE sv.MaSV="111"
+
+3>
+SELECT gv
+FROM TapGiaovien gv
+WHERE gv.trangthai="pgs"
+
+4>
+SELECT distinct gv.diachi.tinhTP
+FROM TapGiaovien gv
+
+5>
+SELECT STRUCT(ten:p.Ten,dchi:p.diachi.tinhTP)
+FROM TapGiaovien p
+
+6>
+SELECT STRUCT (tengv:gv.ten,tenmon:(Select p.ten
+		FROM p IN gv.dsmonday))
+FROM TapGiaovien gv
+
+7>
+SELECT STRUCT(tenmon:mh.ten,monkq:(SELECT t.ten
+		FROM t IN mh.coTienQuyet))
+FROM TapMonhoc mh
+
+8>
+KQ=SELECT tn
+FROM TapNguoi tn
+WHERE tn.ten="Remy Martin"
+ORDER BY tn.CMND ASC
+KQ[0].diachi.tinhTP
+
+9>
+SELECT e.gv.ten
+FROM TapSinhvien sv,TapMonhoc e
+WHERE sv.MSSV = "194.." AND e IN sv.dsmonhoc
+
+10>
+SELECT gv
+FROM TapGiaovien gv
+WHERE EXISTS e IN gv.dsmonday:e.loai=3
+
+11> 
+SELECT gv
+FROM TapGiaovien gv
+WHERE FOR ALL e IN gv.dsmonday: e.loai=3
+
+14>
+GS=COUNT(SELECT gv 
+FROM TapGiaovien gv
+WHERE gv.trangthai="gs")
+
+19>
+SELECT STRUCT(tensv:sv.ten,
+	TongBC:COUNT(SELECT e
+	FROM e IN sv.dsbc),
+	Bang2005:COUNT(SELECT e1 FROM e1 IN sv.dsbc 
+	WHERE e1.nam=2005),
+	namdau:MIN(SELECT e2.nam FROM e2 IN sv.dsbc))	
+FROM TapSinhvien sv
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
